@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org/DTD Mapper 3.0" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.meal.vortex.repository.recordmapper.RecordMapper">
+    <resultMap id="recordMap" type="RecordBean">
+        <id property="record_id" column="record_id" javaType="java.lang.Integer"/>
+        <result property="consume" column="consume" javaType="java.lang.Double"/>
+        <result property="content" column="content" javaType="java.lang.String"/>
+        <result property="consume_datetime" column="consume_datetime"/>
+        <association property="mealBean" column="mealBean" javaType="com.meal.vortex.repository.beans.MealBean">
+            <id property="meal_id" column="meal_id"/>
+            <result property="balance" column="balance"/>
+            <result property="found_datetime" column="found_datetime"/>
+        </association>
+    </resultMap>
+
+    <insert id="insertRecord" useGeneratedKeys="true" keyProperty="record_id">
+      insert into record (consume,content,abroad_meal_id) values (#{consume},#{countent},#{mealBean.meal_id})
+    </insert>
+    <update id="updateRecord">
+        update record set content=#{content} where record_id=#{record_id}
+    </update>
+    <delete id="deleteRecord" parameterType="int">
+        update record set isactivity=0 where record_id=#{record_id}
+    </delete>
+    <select id="selectRecordById" parameterType="int" resultMap="recordMap">
+        select * from record r, meal m where r.record_id=#{abroad_meal_id} and r.isactivity!=0 and r.abroad_meal_id=m.meal_id
+    </select>
+    <select id="selectAllRecord" resultMap="recordMap">
+        select * from record r,meal m where r.isactivity!=0 and r.abroad_meal_id=m.meal_id
+    </select>
+</mapper>

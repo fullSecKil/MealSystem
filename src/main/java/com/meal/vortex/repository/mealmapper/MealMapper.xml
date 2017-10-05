@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org/DTD Mapper 3.0" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.meal.vortex.repository.mealmapper.MealMapper">
+    <resultMap id="mealMap" type="MealBean">
+        <id property="meal_id" column="meal_id" javaType="java.lang.Integer"/>
+        <result property="balance" column="balance" javaType="java.lang.Double"/>
+        <result property="found_datetime" column="found_datetime"/>
+        <association property="userBean" column="userBean" javaType="com.meal.vortex.repository.beans.UserBean">
+            <id property="id" column="id"/>
+            <result property="username" column="username"/>
+            <result property="age" column="age"/>
+            <result property="password" column="password"/>
+            <result property="image" column="image"/>
+        </association>
+    </resultMap>
+    <insert id="insertMeal" useGeneratedKeys="true" keyProperty="meal_id">
+      insert into meal (balance,user_id) values (#{balance},#{userBean.id})
+    </insert>
+
+    <update id="updateMeal">
+        update meal set balance=#{balance},user_id=#{userBean.id} where meal_id=#{meal_id}
+    </update>
+
+    <delete id="deleteMeal" parameterType="int">
+        update meal set isactivity=0 where meal_id=#{meal_id}
+    </delete>
+
+    <select id="selectMealById" parameterType="int" resultMap="mealMap">
+        select * from meal m, user u where m.meal_id=#{meal_id} and m.isactivity!=0 and m.user_id=u.id
+    </select>
+
+    <select id="selectMealByUserName" parameterType="String" resultMap="mealMap">
+        select * from meal m,user u where m.isactivity!=0 and m.user_id=u.id and u.username like "%"#{#userName}"%"
+    </select>
+
+    <select id="selectAllMeal" resultMap="mealMap">
+        select * from meal m,user u where m.isactivity!=0 and m.user_id=u.id
+    </select>
+</mapper>
