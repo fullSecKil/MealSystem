@@ -26,7 +26,12 @@
         select * from user where id=#{id} and isactivity!=0
     </select>
 
+    <select id="selectUserByName" parameterType="String" resultMap="userMap">
+        select * from user where username=#{username} and isactivity!=0
+    </select>
+
     <select id="selectAllUser" resultMap="userMap">
         select * from user where isactivity!=0
     </select>
+
 </mapper>

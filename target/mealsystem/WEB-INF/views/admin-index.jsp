@@ -91,7 +91,7 @@
   <ul class="am-avg-sm-1 am-avg-md-4 am-margin am-padding am-text-center admin-content-list ">
     <li><a href="#" class="am-text-success"><span class="am-icon-btn am-icon-file-text"></span><br/>记录<br/>${consumption.record}条</a></li>
     <li><a href="#" class="am-text-warning"><span class="am-icon-btn am-icon-briefcase"></span><br/>消费金额<br/>${consumption.ever_Consumption}￥</a></li>
-    <li><a href="#" class="am-text-danger"><span class="am-icon-btn am-icon-recycle"></span><br/>今日金额<br/>${consumption.today_Consumption}￥</a></li>
+    <li><a href="#" class="am-text-danger"><span class="am-icon-btn am-icon-recycle"></span><br/>今日消费金额<br/>${consumption.today_Consumption}￥</a></li>
     <li><a href="#" class="am-text-secondary"><span class="am-icon-btn am-icon-user-md"></span><br/>用户<br/>${consumption.mealQuantity}人</a></li>
   </ul>
 
@@ -110,7 +110,7 @@
                 <div class="am-dropdown" data-am-dropdown>
                   <button class="am-btn am-btn-default am-btn-xs am-dropdown-toggle" data-am-dropdown-toggle><span class="am-icon-cog"></span> <span class="am-icon-caret-down"></span></button>
                   <ul class="am-dropdown-content">
-                    <li><a href="#">1. 编辑</a></li>
+                    <li><a href="/form/record/aaa/${strip.record_id}">1. 用户信息</a></li>
                     <li><a href="/form/record/delete/${strip.record_id}">2. 删除</a></li>
                   </ul>
                 </div>

@@ -1,6 +1,7 @@
 package com.meal.vortex.repository.mapper;
 
 import com.meal.vortex.repository.beans.UserBean;
+import org.apache.ibatis.annotations.Mapper;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
@@ -18,6 +19,9 @@ public interface UserMapper  {
 
     //根据id查询
     public UserBean selectUserById(int id) throws Exception;
+
+   //根据username查询
+    public UserBean selectUserByName(String username) throws Exception;
 
     //查询所有用户
     public List<UserBean> selectAllUser() throws Exception;

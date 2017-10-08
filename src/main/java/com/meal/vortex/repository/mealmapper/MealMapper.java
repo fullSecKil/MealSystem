@@ -1,6 +1,7 @@
 package com.meal.vortex.repository.mealmapper;
 
 import com.meal.vortex.repository.beans.MealBean;
+import org.apache.ibatis.annotations.Mapper;
 import org.springframework.stereotype.Component;
 
 import java.util.List;

@@ -1,6 +1,7 @@
 package com.meal.vortex.repository.recordmapper;
 
 import com.meal.vortex.repository.beans.RecordBean;
+import org.apache.ibatis.annotations.Mapper;
 import org.springframework.stereotype.Component;
 
 import java.util.List;

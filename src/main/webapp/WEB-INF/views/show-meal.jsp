@@ -135,7 +135,7 @@
                         <c:if test="${empty mealBeanList}">
                             <div class="am-alert-warning" role="alert">
                                 <span class="user-info-order" aria-hidden="true"></span>
-                                未找到Meal表！
+                                未查找到该用户！
                             </div>
                         </c:if>
 

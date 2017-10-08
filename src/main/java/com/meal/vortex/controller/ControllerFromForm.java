@@ -1,5 +1,6 @@
 package com.meal.vortex.controller;
 
+import com.fasterxml.jackson.core.json.UTF8JsonGenerator;
 import com.meal.vortex.model.ConsumptionAndRecordFromHome;
 import com.meal.vortex.model.LoginUser;
 import com.meal.vortex.repository.beans.MealBean;
@@ -9,6 +10,7 @@ import com.meal.vortex.repository.tools.BeansComponent;
 import com.meal.vortex.repository.tools.MapperComponent;
 import org.apache.commons.lang3.time.DateFormatUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.codec.Utf8;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.ui.ModelMap;
@@ -88,6 +90,14 @@ public class ControllerFromForm {
         return "redirect:/form/login";
     }
 
+    //用户信息
+    @RequestMapping(value = "/record/aaa/{record_id}")
+    public String showRecorInfor(@PathVariable("record_id") Integer record_id,Model model) throws Exception {
+        Integer user_id=mapperComponent.mealMapper.selectMealById(mapperComponent.recordMapper.selectRecordById(record_id).getMealBean().getId()).getUserBean().getId();
+        model.addAttribute("user_id",user_id);
+        return "redirect:/form/user/show/{user_id}";
+    }
+
     //删除消费记录
     @RequestMapping(value = "/record/delete/{record_id}")
     public String delectRecord(@PathVariable("record_id") Integer record_id) throws Exception {
@@ -117,7 +127,6 @@ public class ControllerFromForm {
     public String showMeals(ModelMap modelMap) throws Exception {
         List<MealBean> meals= mapperComponent.mealMapper.selectAllMeal().stream().sorted(Comparator.comparing(MealBean::getId).reversed()).collect(toList());
         modelMap.addAttribute(meals);
-
         return "/show-meal";
     }
 
@@ -127,7 +136,6 @@ public class ControllerFromForm {
             return "redirect:/form/meal/show";
         }
         //List<MealBean> meals= mapperComponent.mealMapper.selectAllMeal().stream().filter(d->d.getUserBean().getUsername().contains(userName)).sorted(Comparator.comparing(MealBean::getId).reversed()).collect(toList());
-
         List<MealBean> meals = mapperComponent.mealMapper.selectMealByUserName(userName);
 
         modelMap.addAttribute(meals);
@@ -168,15 +176,13 @@ public class ControllerFromForm {
 
         return "redirect:/form/meal/show";
     }
-
     //饭卡消费
-    @RequestMapping(value="/meal/consume", method = RequestMethod.POST)
+    @RequestMapping(value="/meal/consume", method = RequestMethod.POST, produces = "application/json; charset=utf-8")
     @ResponseBody
-    public Map<String, Object> doConsume(String meal_id, String consume, HttpServletResponse response, HttpServletRequest request) {
+    public Map<String, Object> doConsume(String meal_id, String consume, String content, HttpServletResponse response, HttpServletRequest request) {
         String result = "fail";
         String context = "卡号不存在，失败！";
         Map<String, Object> reault = new HashMap<>();
-
         MealBean meal = null;
         try {
             meal = mapperComponent.mealMapper.selectMealById(Integer.parseInt(meal_id));
@@ -200,6 +206,8 @@ public class ControllerFromForm {
             meal.setBalance(meal.getBalance()-Double.parseDouble(consume));
         try {
                 mapperComponent.mealMapper.updateMeal(meal);
+                mapperComponent.recordMapper.insertRecord(new RecordBean(Double.parseDouble(consume),content,meal));
+                mapperComponent.commit();
             }
             catch (Exception e) {
                 e.printStackTrace();
@@ -209,11 +217,10 @@ public class ControllerFromForm {
                 return reault;
             }
         result = "success";
-        context= consume+"元支付成功";
+        context= "账号："+meal_id+",支付"+consume+"元成功";
         reault.put("result",result);
-        reault.put("context",context);
+        reault.put("context",context+"  余额："+meal.getBalance());
         return reault;
     }
     //饭卡充值
-
 }
